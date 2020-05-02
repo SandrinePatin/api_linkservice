@@ -43,7 +43,7 @@ app.post('/readAll', function (req, res) {
 app.post('/readOne', function (req, res) {
     const table = req.body.table;
     const values = req.body.values;
-    let where = createWhere(table, values);
+    let where = createWhereOnPrimaryKeys(table, values);
 
     const textQuery = "SELECT * FROM " + table + where;
     console.log(textQuery);
@@ -54,29 +54,52 @@ app.post('/readOne', function (req, res) {
 app.post('/deleteOne', function (req, res) {
     const table = req.body.table;
     const values = req.body.values;
-    let where = createWhere(table, values);
+    let where = createWhereOnPrimaryKeys(table, values);
+    if(where !== null){
+        const textQuery = "DELETE FROM " + table + where;
+        console.log(textQuery);
+        //TODO vérification du token
+        database.queryDB(textQuery, res);
+    } else {
+        res.send('Missing Parameters');
+    }
 
-    const textQuery = "DELETE FROM " + table + where;
-    console.log(textQuery);
-    //TODO vérification du token
-    database.queryDB(textQuery, res);
 });
 
-function createWhere(table, values) {
+app.post('/readWithFilter', function (req, res) {
+    const table = req.body.table;
+    let where = req.body.values.where;
+    if(where !== undefined){
+        const textQuery = "SELECT * FROM " + table + where;
+        console.log(textQuery);
+        //TODO vérification du token
+        database.queryDB(textQuery, res);
+    } else {
+        res.send("Missing Parameters");
+    }
+});
+
+function createWhereOnPrimaryKeys(table, values) {
+    let primaryKeys = [];
+    let prop='';
+    let counter = 0;
+
     if(table.localeCompare('win', 'en', {sensitivity: 'base'}) === 0 || table.localeCompare('apply', 'en', {sensitivity: 'base'}) === 0){ // faire un strcompare
-        let primaryKeys = [];
-        let prop='';
-        let counter = 0;
         for (prop in values){
             if(prop.indexOf('id') >= 0){
                 primaryKeys[counter] = prop + "=" + values[prop];
                 counter++;
             }
         }
-        return " WHERE " + primaryKeys[0] + " AND " + primaryKeys[1];
+        if(primaryKeys[0] !== undefined && primaryKeys[1] !== undefined){
+            return " WHERE " + primaryKeys[0] + " AND " + primaryKeys[1];
+        }
     } else {
-        return " WHERE id=" + values.id;
+        if (values.id !== undefined){
+            return " WHERE id=" + values.id;
+        }
     }
+    return null;
 }
 
 
