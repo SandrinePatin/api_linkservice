@@ -15,7 +15,11 @@ module.exports = {
             con.query(query, function (err, result, fields) {
                 if (err) throw err;
                 console.log(result[0]);
-                res.send(result);
+                if(result ===  undefined){
+                    res.send("Aucune valeur");
+                } else{
+                    res.send(result);
+                }
             });
         });
 
