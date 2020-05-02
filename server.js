@@ -41,12 +41,22 @@ app.post('/readAll', function (req, res) {
 });
 
 app.post('/readOne', function (req, res) {
-
     const table = req.body.table;
     const values = req.body.values;
     let where = createWhere(table, values);
 
     const textQuery = "SELECT * FROM " + table + where;
+    console.log(textQuery);
+    //TODO vérification du token
+    database.queryDB(textQuery, res);
+});
+
+app.post('/deleteOne', function (req, res) {
+    const table = req.body.table;
+    const values = req.body.values;
+    let where = createWhere(table, values);
+
+    const textQuery = "DELETE FROM " + table + where;
     console.log(textQuery);
     //TODO vérification du token
     database.queryDB(textQuery, res);
