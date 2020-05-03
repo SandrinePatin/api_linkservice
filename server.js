@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const jwt = require('jsonwebtoken');
 const database = require('./db_connection');
+const create = require('./create');
 const express = require('express');
 const app = express();
 
@@ -27,6 +28,8 @@ app.use(express.json());
 app.post('/create', async function (req, res) {
     const table = req.body.table;
     const values = req.body.values;
+
+    const request = create.createRequest(table, values);
 
     let prop = '';
     let counter = 0;
