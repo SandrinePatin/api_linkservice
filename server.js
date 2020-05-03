@@ -28,29 +28,11 @@ app.use(express.json());
 app.post('/create', async function (req, res) {
     const table = req.body.table;
     const values = req.body.values;
+    const error = undefined;
 
-    const request = create.createRequest(table, values);
-
-    let prop = '';
-    let counter = 0;
-    let columnsName = "(";
-    let columnsValues = "(";
-
-    for (prop in values) {
-        if (counter > 0) {
-            columnsName += ", ";
-            columnsValues += ", ";
-        }
-        columnsName += prop;
-        columnsValues += '"' + values[prop] + '"';
-        counter++;
-    }
-    columnsName += ")";
-    columnsValues += ")";
+    const textQuery = create.createRequest(table, values, error);
 
     if (table !== undefined) {
-        const textQuery = "INSERT INTO " + table + columnsName + " VALUES " + columnsValues;
-        console.log(textQuery);
         //TODO vérification du token
         database.queryDB(textQuery, res);
     } else {
