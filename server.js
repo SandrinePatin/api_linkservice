@@ -53,9 +53,31 @@ app.post('/create', async function (req, res) {
     } else {
         res.send("Missing Parameters : table");
     }
+});
 
-    console.log(columnsName);
-    console.log(req.body.values.name);
+app.post('/update',function (req, res) {
+    const table = req.body.table;
+    const values = req.body.values;
+    const where = createWhereOnPrimaryKeys(table, values);
+    let prop = '';
+    let counter = 0;
+    let newValues = '';
+
+    for (prop in values) {
+        if (counter > 0) {
+            newValues += ", ";
+        }
+        newValues += prop + '= "' + values[prop] + '"';
+        counter++;
+    }
+    if (table !== undefined) {
+        const textQuery = "UPDATE " + table + " SET " + newValues + where;
+        console.log(textQuery);
+        //TODO vérification du token
+        database.queryDB(textQuery, res);
+    } else {
+        res.send("Missing Parameters : table");
+    }
 });
 
 app.post('/readAll', function (req, res) {
