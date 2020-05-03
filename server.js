@@ -34,10 +34,15 @@ app.post('/create', async function (req, res) {
 
 app.post('/readAll', function (req, res) {
     const table = req.body.table;
-    const textQuery = "SELECT * FROM " + table;
-    console.log(textQuery);
-    //TODO vérification du token
-    database.queryDB(textQuery, res);
+    if(table !== undefined){
+        const textQuery = "SELECT * FROM " + table;
+        console.log(textQuery);
+        //TODO vérification du token
+        database.queryDB(textQuery, res);
+    } else {
+        res.send("Missing Parameters : table");
+    }
+
 });
 
 app.post('/readOne', function (req, res) {
@@ -45,17 +50,22 @@ app.post('/readOne', function (req, res) {
     const values = req.body.values;
     let where = createWhereOnPrimaryKeys(table, values);
 
-    const textQuery = "SELECT * FROM " + table + where;
-    console.log(textQuery);
-    //TODO vérification du token
-    database.queryDB(textQuery, res);
+    if(where !== null && table !== undefined){
+        const textQuery = "SELECT * FROM " + table + where;
+        console.log(textQuery);
+        //TODO vérification du token
+        database.queryDB(textQuery, res);
+    } else {
+        res.send("Missing Parameters");
+    }
+
 });
 
 app.post('/deleteOne', function (req, res) {
     const table = req.body.table;
     const values = req.body.values;
     let where = createWhereOnPrimaryKeys(table, values);
-    if(where !== null){
+    if(where !== null && table !== undefined){
         const textQuery = "DELETE FROM " + table + where;
         console.log(textQuery);
         //TODO vérification du token
