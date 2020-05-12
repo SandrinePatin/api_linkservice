@@ -28,19 +28,19 @@ app.use(express.json());
 app.post('/create', async function (req, res) {
     const table = req.body.table;
     const values = req.body.values;
-    const error = undefined;
 
-    const textQuery = create.createRequest(table, values, error);
+    const textQuery = create.createRequest(table, values, res);
 
-    if (table !== undefined) {
+    if (table !== undefined && textQuery !== undefined) {
         //TODO vérification du token
         database.queryDB(textQuery, res);
-    } else {
+    }
+    if (table === undefined) {
         res.send("Missing Parameters : table");
     }
 });
 
-app.post('/update',function (req, res) {
+app.post('/update', function (req, res) {
     const table = req.body.table;
     const values = req.body.values;
     const where = createWhereOnPrimaryKeys(table, values);

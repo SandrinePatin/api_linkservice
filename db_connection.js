@@ -10,21 +10,21 @@ module.exports = {
             database: "linkservice"
         });
 
-        con.connect(function(err) {
+        con.connect(function (err) {
             if (err) throw err;
             con.query(query, function (err, result, fields) {
                 if (err) {
-                    res.send(err);
-                } else {
-                    console.log(result[0]);
-                    if(result ===  undefined){
-                        res.send("Aucune valeur");
-                    } else{
-                        res.send(result);
+                    if (err.sqlState === "42S02") {
+                        res.send("Error : Unknown table or database");
+                    } else {
+                        res.send(err);
                     }
+                } else {
+                    res.send(result);
                 }
 
             });
+            return con.result;
         });
 
     },
