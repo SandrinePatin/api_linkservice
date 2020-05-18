@@ -114,13 +114,25 @@ app.post('/readWithFilter', function (req, res) {
     let where = req.body.values.where;
     if (where !== undefined) {
         const textQuery = "SELECT * FROM " + table + where;
-        console.log(textQuery);
         //TODO vérification du token
         database.queryDB(textQuery, res);
     } else {
         res.send("Missing Parameters");
     }
 });
+
+app.post('/connection', function (req, res) {
+    const table = req.body.table;
+    const where = createConnectionWhere(req.body.values);
+    if (table !== undefined && where !== undefined) {
+        const textQuery = "SELECT id FROM " + table + where;
+        console.log(textQuery);
+        database.queryDB(textQuery, res);
+    } else {
+        res.send("Missing parameters: Need table, email and password");
+    }
+
+})
 
 function createWhereOnPrimaryKeys(table, values) {
     let primaryKeys = [];
@@ -143,6 +155,18 @@ function createWhereOnPrimaryKeys(table, values) {
         }
     }
     return null;
+}
+
+function createConnectionWhere(values) {
+    let email;
+    let password;
+    if (values.email !== undefined) {
+        email = values.email;
+    }
+    if (values.password !== undefined) {
+        password = values.password;
+    }
+    return ' WHERE email="' + email + '" AND password="' + password + '"';
 }
 
 
