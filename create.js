@@ -8,7 +8,6 @@ module.exports = {
         let error = false;
         //Déterminer les colonnes indispensables
         const requiredColumns = getRequiredColumns(table);
-        console.log(requiredColumns);
         //Déterminer si elles sont présentes
         for (counter = 0; counter < requiredColumns.length; counter++) {
             if (values.hasOwnProperty(requiredColumns[counter]) !== true) {
@@ -45,10 +44,10 @@ function getRequiredColumns(table) {
         "badge": "name, pointsLimit, id_type",
         "type_service": "name",
         "win": "id_user, id_badge",
-        "Service": "name, description, date, deadline, cost, profit, access, id_creator, id_type",
-        "Ticket": "date, description, statut, id_user_creator",
-        "Apply": "id_user, id_service",
-        "User": "Email, Password, Name, Surname, Birthdate, Points, category, type",
+        "service": "name, description, date, deadline, cost, profit, access, id_creator, id_type",
+        "ticket": "date, description, statut, id_user_creator",
+        "apply": "id_user, id_service",
+        "user": "email, password, name, surname, birthdate, points, category, type",
         "messsage": "content, date, id_sender, id_dest"
     }
 

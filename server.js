@@ -27,8 +27,7 @@ app.use(express.json());
 
 app.post('/create', async function (req, res) {
     const table = req.body.table;
-    const values = req.body.values;
-
+    const values = req.body.value;
     const textQuery = create.createRequest(table, values, res);
 
     if (table !== undefined && textQuery !== undefined) {
