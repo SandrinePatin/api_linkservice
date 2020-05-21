@@ -47,7 +47,7 @@ function getRequiredColumns(table) {
         "service": "name, description, date, deadline, cost, profit, access, id_creator, id_type",
         "ticket": "date, description, statut, id_user_creator",
         "apply": "id_user, id_service",
-        "user": "email, password, name, surname, birthdate, points, category, type",
+        "user": "email, password, name, surname, birthdate, type",
         "messsage": "content, date, id_sender, id_dest"
     }
 
