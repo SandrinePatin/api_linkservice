@@ -20,7 +20,8 @@ module.exports = {
                         res.send(err);
                     }
                 } else {
-                    res.send(result);
+                    const data = refactorResultToJson(result);
+                    res.send();
                 }
 
             });
@@ -31,5 +32,22 @@ module.exports = {
 
 };
 
-
+function refactorResultToJson(result) {
+    let jsonData;
+    if(result.length > 1){
+        jsonData = "{";
+        for(let i = 0 ; i < result.length ; i++){
+            jsonData += '"'+i+'" : '+JSON.stringify(result[i]);
+            if(i < result.length-1){
+                jsonData +=',';
+            }
+        }
+        jsonData += '}';
+    } else if (result.length === 1){
+        jsonData = JSON.stringify(result[0]);
+    } else {
+        jsonData = "null";
+    }
+    return jsonData;
+}
 
