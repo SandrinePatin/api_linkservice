@@ -21,7 +21,7 @@ module.exports = {
                     }
                 } else {
                     const data = refactorResultToJson(result);
-                    res.send();
+                    res.send(data);
                 }
 
             });
