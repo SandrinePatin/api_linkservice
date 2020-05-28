@@ -138,19 +138,20 @@ function createWhereOnPrimaryKeys(table, values) {
     let prop = '';
     let counter = 0;
 
-    if (table.localeCompare('win', 'en', {sensitivity: 'base'}) === 0 || table.localeCompare('apply', 'en', {sensitivity: 'base'}) === 0) { // faire un strcompare
+    // Si la table correspond à la table "win" ou "apply"
+    if (table.localeCompare('win', 'en', {sensitivity: 'base'}) === 0 || table.localeCompare('apply', 'en', {sensitivity: 'base'}) === 0) {
         for (prop in values) {
             if (prop.indexOf('id') >= 0) {
-                primaryKeys[counter] = prop + "=" + values[prop];
+                primaryKeys[counter] = prop + '=\"' + values[prop] + '\"';
                 counter++;
             }
         }
         if (primaryKeys[0] !== undefined && primaryKeys[1] !== undefined) {
-            return " WHERE " + primaryKeys[0] + " AND " + primaryKeys[1];
+            return ' WHERE ' + primaryKeys[0] + ' AND ' + primaryKeys[1];
         }
     } else {
         if (values.id !== undefined) {
-            return " WHERE id=" + values.id;
+            return ' WHERE id=\"' + values.id + '\"';
         }
     }
     return null;
