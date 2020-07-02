@@ -48,7 +48,7 @@ function getRequiredColumns(table) {
         "ticket": "date, description, statut, id_user_creator",
         "apply": "id_user, id_service",
         "user": "email, password, name, surname, birthdate, type",
-        "messsage": "content, date, id_sender, id_dest"
+        "message": "content, date, id_sender, id_dest"
     }
 
     return allRequiredColumns[table].split(", ");
