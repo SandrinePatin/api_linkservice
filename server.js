@@ -29,7 +29,7 @@ app.post('/create', async function (req, res) {
     const table = req.body.table;
     const values = req.body.values;
     const textQuery = create.createRequest(table, values, res);
-
+    console.log(textQuery);
     if (table !== undefined && textQuery !== undefined) {
         //TODO vérification du token
         database.queryDB(textQuery, res);
@@ -94,13 +94,28 @@ app.post('/readOne', function (req, res) {
 });
 
 app.post('/deleteOne', function (req, res) {
+    console.log(req.body);
     const table = req.body.table;
     const values = req.body.values;
     let where = createWhereOnPrimaryKeys(table, values);
+    console.log(where);
     if (where !== null && table !== undefined) {
         const textQuery = "DELETE FROM " + table + where;
         console.log(textQuery);
-        //TODO vérification du token
+        database.queryDB(textQuery, res);
+    } else {
+        res.send('Missing Parameters');
+    }
+
+});
+
+app.post('/deleteWithFilter', function (req, res) {
+    console.log(req.body);
+    const table = req.body.table;
+    const where = req.body.values.where;
+    if (where !== null && table !== undefined) {
+        const textQuery = "DELETE FROM " + table + where;
+        console.log(textQuery);
         database.queryDB(textQuery, res);
     } else {
         res.send('Missing Parameters');
@@ -113,7 +128,7 @@ app.post('/readWithFilter', function (req, res) {
     let where = req.body.values.where;
     if (where !== undefined) {
         const textQuery = "SELECT * FROM " + table + where;
-        //TODO vérification du token
+        console.log(textQuery);
         database.queryDB(textQuery, res);
     } else {
         res.send("Missing Parameters");
@@ -131,6 +146,17 @@ app.post('/connection', function (req, res) {
         res.send("Missing parameters: Need table, email and password");
     }
 
+})
+
+app.post('/count', function (req, res) {
+    const table = req.body.table;
+    let where = req.body.values.where;
+    if (where !== undefined) {
+        const textQuery = "SELECT COUNT(*) FROM " + table + where;
+        database.queryDB(textQuery, res);
+    } else {
+        res.send("Missing Parameters");
+    }
 })
 
 function createWhereOnPrimaryKeys(table, values) {
