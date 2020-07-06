@@ -195,4 +195,45 @@ function createConnectionWhere(values) {
     return ' WHERE email="' + email + '" AND password="' + password + '"';
 }
 
+app.post('/service/executor', function (req, res) {
+    let id = req.body.values.id;
+    if (where !== undefined) {
+        const textQuery = 'SELECT * FROM APPLY INNER JOIN USER WHERE execute=2 AND id_user=id AND id_service='+id;
+        console.log(textQuery);
+        database.queryDB(textQuery, res);
+    } else {
+        res.send("Missing Parameters");
+    }
+});
 
+app.post('/user/:idUser', function (req, res) {
+    let id = req.body.values.id;
+    if (where !== undefined) {
+        const textQuery = 'SELECT * FROM USER WHERE id='+id;
+        console.log(textQuery);
+        database.queryDB(textQuery, res);
+    } else {
+        res.send("Missing Parameters");
+    }
+});
+
+app.post('/connection/user', function (req, res) {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    if (email !== undefined && password !== undefined) {
+        const textQuery = 'SELECT * FROM USER WHERE email="'+email+'" AND password="'+password+'"';
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
+    } else {
+        res.send("Missing parameters: Need table, email and password");
+    }
+
+})
+
+app.get('/typeService', function (req, res) {
+
+    const textQuery = 'SELECT * FROM TYPE_SERVICE WHERE active=1';
+    console.log(textQuery);
+    database.queryDBReturnArray(textQuery, res);
+})

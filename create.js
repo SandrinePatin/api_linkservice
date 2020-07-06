@@ -13,6 +13,7 @@ module.exports = {
             if (values.hasOwnProperty(requiredColumns[counter]) !== true) {
                 error = true;
                 res.send("Missing required argument : " + requiredColumns[counter]);
+                return;
             }
         }
 
@@ -45,7 +46,7 @@ function getRequiredColumns(table) {
         "type_service": "name",
         "win": "id_user, id_badge",
         "service": "name, description, date, deadline, cost, profit, access, id_creator, id_type",
-        "ticket": "date, description, statut, id_user_creator",
+        "ticket": "description, statut, id_user_creator",
         "apply": "id_user, id_service",
         "user": "email, password, name, surname, birthdate, type",
         "message": "content, date, id_sender, id_dest"
