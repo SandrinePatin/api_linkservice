@@ -225,8 +225,15 @@ app.get('/service/executor/:id_service', function (req, res) {
     }
 });
 
-app.delete('/services/:id', function (req, res) {
+app.patch('/services/:id', function (req, res) {
     let {id} = req.params;
+    let {name} = req.params;
+    let {description} = req.params;
+    let {date} = req.params;
+    let {deadline} = req.params;
+    let {access} = req.params;
+    let {Statut} = req.params;
+
     console.log(id);
     if (id !== undefined) {
         const textQuery = 'UPDATE SERVICE SET `Statut`=0 WHERE id=' + id;
@@ -300,9 +307,9 @@ app.patch('/apply', function (req, res) {
     const {execute} = req.body;
     const {note} = req.body;
     const {commentaire} = req.body;
-
+    console.log(id_user);
     if (id_service !== undefined && id_user !== undefined) {
-        const textQuery = 'UPDATE APPLY SET `id_service`=' + id_service + ',`execute`=' + execute + ',`note`=' + note + ',`commentaire`=' + commentaire + ' WHERE id_service='+id_service;
+        const textQuery = 'UPDATE APPLY SET `id_service`=' + id_service + ',`execute`=' + execute + ',`note`=' + note + ',`commentaire`="' + commentaire + '" WHERE id_service='+id_service+" AND id_user="+id_user;
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
     } else {
