@@ -195,34 +195,65 @@ function createConnectionWhere(values) {
     return ' WHERE email="' + email + '" AND password="' + password + '"';
 }
 
-app.post('/service/executor', function (req, res) {
-    let id = req.body.values.id;
-    if (where !== undefined) {
-        const textQuery = 'SELECT * FROM APPLY INNER JOIN USER WHERE execute=2 AND id_user=id AND id_service='+id;
+app.get('/services/statut/:statutService', function (req, res) {
+    let {statutService} = req.params;
+
+    const textQuery = 'SELECT * FROM SERVICE WHERE Statut = '+ statutService;
+    console.log(textQuery);
+    database.queryDBReturnArray(textQuery, res);
+
+});
+
+app.get('/services/creator/:id_creator', function (req, res) {
+    let {id_creator} = req.params;
+
+    const textQuery = 'SELECT * FROM SERVICE WHERE id_creator=' + id_creator;
+    console.log(textQuery);
+    database.queryDBReturnArray(textQuery, res);
+});
+
+app.get('/service/executor/:id_service', function (req, res) {
+
+    let {id_service} = req.params;
+
+    if (id_service !== undefined) {
+        const textQuery = 'SELECT * FROM APPLY INNER JOIN USER WHERE execute=2 AND APPLY.id_user=USER.id AND id_service=' + id_service;
         console.log(textQuery);
-        database.queryDB(textQuery, res);
+        database.queryDBReturnArray(textQuery, res);
     } else {
         res.send("Missing Parameters");
     }
 });
 
-app.post('/user/:idUser', function (req, res) {
-    let id = req.body.values.id;
-    if (where !== undefined) {
-        const textQuery = 'SELECT * FROM USER WHERE id='+id;
+app.delete('/services/:id', function (req, res) {
+    let {id} = req.params;
+    console.log(id);
+    if (id !== undefined) {
+        const textQuery = 'UPDATE SERVICE SET `Statut`=0 WHERE id=' + id;
         console.log(textQuery);
-        database.queryDB(textQuery, res);
+        database.queryDBReturnArray(textQuery, res);
+    } else {
+        res.send("Missing Parameters");
+    }
+});
+
+app.get('/user/:idUser', function (req, res) {
+    let {idUser} = req.params
+    if (idUser !== undefined) {
+        const textQuery = 'SELECT * FROM USER WHERE id=' + idUser;
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
     } else {
         res.send("Missing Parameters");
     }
 });
 
 app.post('/connection/user', function (req, res) {
-    const email = req.body.email;
-    const password = req.body.password;
+    const {email} = req.body;
+    const {password} = req.body;
 
     if (email !== undefined && password !== undefined) {
-        const textQuery = 'SELECT * FROM USER WHERE email="'+email+'" AND password="'+password+'"';
+        const textQuery = 'SELECT * FROM USER WHERE email="' + email + '" AND password="' + password + '"';
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
     } else {
@@ -231,9 +262,67 @@ app.post('/connection/user', function (req, res) {
 
 })
 
-app.get('/typeService', function (req, res) {
+app.get('/typeService/active', function (req, res) {
 
     const textQuery = 'SELECT * FROM TYPE_SERVICE WHERE active=1';
     console.log(textQuery);
     database.queryDBReturnArray(textQuery, res);
 })
+
+app.get('/typeService/:idType', function (req, res) {
+    let {idType} = req.params
+    const textQuery = 'SELECT * FROM TYPE_SERVICE WHERE id=' + idType;
+    console.log(textQuery);
+    database.queryDBReturnArray(textQuery, res);
+
+});
+
+app.post('/apply', function (req, res) {
+
+    const {id_service} = req.body;
+    const {id_user} = req.body;
+    const {execute} = req.body;
+
+    if (id_service !== undefined && id_user !== undefined) {
+        const textQuery = 'INSERT INTO APPLY (`id_service`,`id_user`,`execute`) VALUES (' + id_service + ',' + id_user + ',' + execute + ')';
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
+    } else {
+        res.send("Missing parameters");
+    }
+
+})
+
+app.patch('/apply', function (req, res) {
+
+    const {id_service} = req.body;
+    const {id_user} = req.body;
+    const {execute} = req.body;
+    const {note} = req.body;
+    const {commentaire} = req.body;
+
+    if (id_service !== undefined && id_user !== undefined) {
+        const textQuery = 'UPDATE APPLY SET `id_service`=' + id_service + ',`execute`=' + execute + ',`note`=' + note + ',`commentaire`=' + commentaire + ' WHERE id_service='+id_service;
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
+    } else {
+        res.send("Missing parameters");
+    }
+
+})
+
+app.get('/apply/:id_user', function (req, res) {
+    let {id_user} = req.params
+    const textQuery = 'SELECT * FROM APPLY INNER JOIN service WHERE id_service = id AND Statut>0 AND id_user=' + id_user;
+    console.log(textQuery);
+    database.queryDBReturnArray(textQuery, res);
+
+});
+
+app.get('/apply/service/:id_service', function (req, res) {
+    let {id_service} = req.params
+    const textQuery = 'SELECT * FROM APPLY INNER JOIN user WHERE id_user = id AND execute=1 AND id_service=' + id_service;
+    console.log(textQuery);
+    database.queryDBReturnArray(textQuery, res);
+
+});
