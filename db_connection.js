@@ -40,6 +40,7 @@ module.exports = {
     queryDBReturnArray: function (query, res) {
         con.query(query, function (err, result, fields) {
             if (err) {
+                console.log(err)
                 if (err.sqlState === "42S02") {
                     res.send("Error : Unknown table or database");
                 } else {
