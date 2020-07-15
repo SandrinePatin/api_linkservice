@@ -17,24 +17,20 @@ module.exports = {
 
     queryDB: function (query, res) {
 
-
-        con.connect(function (err) {
-            if (err) throw err;
-            con.query(query, function (err, result, fields) {
-                if (err) {
-                    if (err.sqlState === "42S02") {
-                        res.send("Error : Unknown table or database");
-                    } else {
-                        res.send(err);
-                    }
+        con.query(query, function (err, result, fields) {
+            if (err) {
+                if (err.sqlState === "42S02") {
+                    res.send("Error : Unknown table or database");
                 } else {
-                    const data = refactorResultToJson(result);
-                    res.send(data);
+                    res.send(err);
                 }
+            } else {
+                const data = refactorResultToJson(result);
+                res.send(data);
+            }
 
-            });
-            return con.result;
         });
+        return con.result;
     },
 
     queryDBReturnArray: function (query, res) {
