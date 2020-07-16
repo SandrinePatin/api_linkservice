@@ -238,7 +238,7 @@ app.patch('/services/:id', function (req, res) {
         const textQuery = {
             sql: 'UPDATE SERVICE SET `name` = ?, `description` = ?, `date` = ?, `deadline` = ?, `access` = ?, `Statut` = ? WHERE id=?',
             values: [name, description, date, deadline, access, Statut,id]
-        }
+        };
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
     } else {
@@ -261,7 +261,7 @@ app.post('/services', function (req, res) {
     const textQuery = {
         sql: 'INSERT INTO SERVICE (`name`, `description`, `date`, `deadline`,`cost`,`profit`, `access`, `Statut`, id_type, id_creator) VALUES (?,?,?,?,?,?,?,?,?,?) ',
         values: [name, description, date, deadline, cost, profit, access, Statut, id_type,id_creator]
-    }
+    };
     console.log(textQuery);
     database.queryDBReturnArray(textQuery, res);
 
@@ -304,7 +304,7 @@ app.patch('/user/:id', function (req, res) {
         const textQuery = {
             sql: 'UPDATE USER SET `name`=?, `surname`=?, `birthdate`=?, `points`=?,`type`=? WHERE id = ?',
             values: [name, surname, birthdate, points, type, id]
-        }
+        };
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
     }
@@ -325,7 +325,7 @@ app.post('/user', function (req, res) {
     const textQuery = {
         sql: 'INSERT INTO USER (`email`,`password`,`name`, `surname`, `birthdate`, `points`,`type`,`adress`,`city`,`postcode`) VALUES (?,?,?,?,?,?,?,?,?,?)',
         values: [email, password, name, surname, birthdate, points, type, adress, city, postcode]
-    }
+    };
     console.log(textQuery);
     database.queryDBReturnArray(textQuery, res);
 
@@ -346,14 +346,14 @@ app.post('/connection/user', function (req, res) {
         res.send("Missing parameters: Need table, email and password");
     }
 
-})
+});
 
 app.get('/typeService/active', function (req, res) {
 
     const textQuery = 'SELECT * FROM TYPE_SERVICE WHERE active=1';
     console.log(textQuery);
     database.queryDBReturnArray(textQuery, res);
-})
+});
 
 app.get('/typeService/:idType', function (req, res) {
     let {idType} = req.params
@@ -377,7 +377,7 @@ app.post('/apply', function (req, res) {
         res.send("Missing parameters");
     }
 
-})
+});
 
 app.patch('/apply', function (req, res) {
     const {id_service} = req.body;
@@ -394,7 +394,7 @@ app.patch('/apply', function (req, res) {
         res.send("Missing parameters");
     }
 
-})
+});
 
 app.get('/apply/:id_user', function (req, res) {
     let {id_user} = req.params
@@ -438,32 +438,32 @@ app.get('/apply/note/:id_user&:id_type', function (req, res) {
         const textQuery = {
             sql: 'SELECT COALESCE(sum(note), 0) as note from APPLY INNER JOIN SERVICE ON APPLY.id_service = SERVICE.id WHERE APPLY.execute = 2 and APPLY.id_user = ? and SERVICE.id_type = ?',
             values: [id_user, id_type]
-        }
+        };
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
     }
-})
+});
 
 app.get('/badges', function (req, res) {
     const textQuery = {
         sql: 'SELECT * from BADGE ORDER BY pointsLimit'
-    }
+    };
     console.log(textQuery);
     database.queryDBReturnArray(textQuery, res);
-})
+});
 
 app.get('/badges/user/:id_user', function (req, res) {
-    let {id_user} = req.params
+    let {id_user} = req.params;
 
     if(id_user){
         const textQuery = {
             sql: 'SELECT * from WIN WHERE id_user=?',
             values: [id_user]
-        }
+        };
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
     }
-})
+});
 
 app.post('/win', function (req, res) {
     let {id_user} = req.body
@@ -473,8 +473,24 @@ app.post('/win', function (req, res) {
         const textQuery = {
             sql: 'INSERT INTO WIN(`id_badge`, `id_user`) VALUES (?,?)',
             values: [id_badge,id_user]
-        }
+        };
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
     }
-})
+});
+
+app.get('/badge/own/:id_user&:id_type', function (req, res) {
+    let {id_user} = req.params;
+    let {id_type} = req.params;
+
+    if (id_user != null && id_type != null){
+        const textQuery = {
+            sql: "SELECT badge.id, badge.name, badge.image, badge.pointsLimit, badge.id_type FROM `badge` INNER JOIN win ON badge.id = win.id_badge WHERE win.id_user = ? AND badge.id_type = ? HAVING badge.pointsLimit = MAX(badge.pointsLimit)",
+            values: [id_user, id_type]
+        };
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
+    }
+});
+
+///SELECT badge.id, badge.name, badge.image, badge.pointsLimit, badge.id_type FROM `badge` INNER JOIN win ON badge.id = win.id_badge WHERE win.id_user = 1 AND badge.id_type = 6 HAVING badge.pointsLimit = MAX(badge.pointsLimit)
