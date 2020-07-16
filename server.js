@@ -336,7 +336,10 @@ app.post('/connection/user', function (req, res) {
     const {password} = req.body;
 
     if (email !== undefined && password !== undefined) {
-        const textQuery = 'SELECT * FROM USER WHERE email="' + email + '" AND password="' + password + '"';
+        const textQuery = {
+            sql: 'SELECT * FROM USER WHERE email=? AND password=?',
+            values: [email, password]
+        }
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
     } else {
@@ -377,7 +380,6 @@ app.post('/apply', function (req, res) {
 })
 
 app.patch('/apply', function (req, res) {
-
     const {id_service} = req.body;
     const {id_user} = req.body;
     const {execute} = req.body;
@@ -407,6 +409,24 @@ app.get('/apply/service/:id_service', function (req, res) {
     const textQuery = 'SELECT * FROM APPLY INNER JOIN user WHERE id_user = id AND execute=1 AND id_service=' + id_service;
     console.log(textQuery);
     database.queryDBReturnArray(textQuery, res);
+
+});
+
+app.get('/apply/service/user/:id_service&:id_user', function (req, res) {
+    let {id_service} = req.params
+    let {id_user} = req.params
+
+    if(id_service && id_user){
+        const textQuery = {
+            sql : 'SELECT * FROM APPLY WHERE id_user = ? AND id_service=?',
+            values : [id_user, id_service]
+        };
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
+    } else {
+        res.send("Missing parameters")
+    }
+
 
 });
 
