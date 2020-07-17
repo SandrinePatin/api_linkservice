@@ -146,7 +146,7 @@ app.post('/connection', function (req, res) {
         res.send("Missing parameters: Need table, email and password");
     }
 
-})
+});
 
 app.post('/count', function (req, res) {
     const table = req.body.table;
@@ -157,7 +157,7 @@ app.post('/count', function (req, res) {
     } else {
         res.send("Missing Parameters");
     }
-})
+});
 
 function createWhereOnPrimaryKeys(table, values) {
     let primaryKeys = [];
@@ -279,7 +279,7 @@ app.get('/user/:idUser', function (req, res) {
 });
 
 app.get('/user/email/:email', function (req, res) {
-    let {email} = req.params
+    let {email} = req.params;
     if (email !== undefined) {
         const textQuery = {
             sql : 'SELECT * FROM USER WHERE email=?',
