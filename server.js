@@ -146,7 +146,7 @@ app.post('/connection', function (req, res) {
         res.send("Missing parameters: Need table, email and password");
     }
 
-})
+});
 
 app.post('/count', function (req, res) {
     const table = req.body.table;
@@ -157,7 +157,7 @@ app.post('/count', function (req, res) {
     } else {
         res.send("Missing Parameters");
     }
-})
+});
 
 function createWhereOnPrimaryKeys(table, values) {
     let primaryKeys = [];
@@ -299,7 +299,7 @@ app.get('/user/:idUser', function (req, res) {
 });
 
 app.get('/user/email/:email', function (req, res) {
-    let {email} = req.params
+    let {email} = req.params;
     if (email !== undefined) {
         const textQuery = {
             sql : 'SELECT * FROM USER WHERE email=?',
@@ -357,7 +357,7 @@ app.post('/connection/user', function (req, res) {
 
     if (email !== undefined && password !== undefined) {
         const textQuery = {
-            sql: 'SELECT * FROM USER WHERE email=? AND password=?',
+            sql: 'SELECT * FROM user WHERE email=? AND password=?',
             values: [email, password]
         }
         console.log(textQuery);
@@ -505,8 +505,9 @@ app.get('/badge/own/:id_user&:id_type', function (req, res) {
 
     if (id_user != null && id_type != null){
         const textQuery = {
-            sql: "SELECT badge.id, badge.name, badge.image, badge.pointsLimit, badge.id_type FROM `badge` INNER JOIN win ON badge.id = win.id_badge WHERE win.id_user = ? AND badge.id_type = ? HAVING badge.pointsLimit = MAX(badge.pointsLimit)",
-            values: [id_user, id_type]
+            sql: "SELECT badge.id, badge.name, badge.image, badge.pointsLimit, badge.id_type FROM `badge` INNER JOIN win ON badge.id = win.id_badge WHERE win.id_user = ? AND badge.id_type = ? " +
+                "HAVING badge.pointsLimit = (SELECT MAX(badge.pointsLimit) FROM badge INNER JOIN win ON badge.id = win.id_badge WHERE win.id_user = ? AND badge.id_type = ? )",
+            values: [id_user, id_type, id_user, id_type]
         };
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
@@ -514,3 +515,5 @@ app.get('/badge/own/:id_user&:id_type', function (req, res) {
 });
 
 ///SELECT badge.id, badge.name, badge.image, badge.pointsLimit, badge.id_type FROM `badge` INNER JOIN win ON badge.id = win.id_badge WHERE win.id_user = 1 AND badge.id_type = 6 HAVING badge.pointsLimit = MAX(badge.pointsLimit)
+
+//SELECT badge.id, badge.name, badge.image, badge.pointsLimit, badge.id_type FROM `badge` INNER JOIN win ON badge.id = win.id_badge WHERE win.id_user = 1 AND badge.id_type = 4 HAVING badge.pointsLimit = (SELECT MAX(badge.pointsLimit) FROM badge INNER JOIN win ON badge.id = win.id_badge WHERE win.id_user = 8 AND badge.id_type = 4 )
