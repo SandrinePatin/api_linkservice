@@ -198,9 +198,29 @@ function createConnectionWhere(values) {
 app.get('/services/statut/:statutService', function (req, res) {
     let {statutService} = req.params;
 
-    const textQuery = 'SELECT * FROM SERVICE WHERE Statut = '+ statutService;
-    console.log(textQuery);
-    database.queryDBReturnArray(textQuery, res);
+    if(statutService){
+        const textQuery = {
+            sql :'SELECT * FROM SERVICE WHERE Statut = ? ',
+            values : [statutService]
+        };
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
+    }
+
+});
+
+app.get('/services/typeService/:id_type', function (req, res) {
+    let {id_type} = req.params;
+
+    if(id_type){
+        const textQuery = {
+            sql :'SELECT * FROM SERVICE WHERE id_type = ? ',
+            values : [id_type]
+        };
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
+    }
+
 
 });
 
