@@ -220,8 +220,20 @@ app.get('/services/typeService/:id_type', function (req, res) {
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
     }
+});
 
+app.get('/services/actif/:id_type&:statut', function (req, res) {
+    let {id_type} = req.params;
+    let {statut} = req.params;
 
+    if (id_type && statut){
+        const textQuery = {
+            sql :'SELECT * FROM SERVICE WHERE id_type = ? AND Statut = ?',
+            values : [id_type, statut]
+        };
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
+    }
 });
 
 app.get('/services/creator/:id_creator', function (req, res) {
