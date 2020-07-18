@@ -430,7 +430,10 @@ app.patch('/apply', function (req, res) {
 
 app.get('/apply/:id_user', function (req, res) {
     let {id_user} = req.params
-    const textQuery = 'SELECT * FROM APPLY INNER JOIN service WHERE id_service = id AND Statut>0 AND id_user=' + id_user;
+    const textQuery = {
+        sql : 'SELECT * FROM APPLY INNER JOIN service WHERE id_service = id AND Statut>0 AND id_user=?',
+        values : [id_user]
+    };
     console.log(textQuery);
     database.queryDBReturnArray(textQuery, res);
 
@@ -600,7 +603,7 @@ app.get('/messages/:id_sender&:id_dest', function (req, res){
     let {id_dest} = req.params;
     if (id_sender != null){
         const textQuery = {
-            sql: "SELECT * FROM `MESSAGE` WHERE (id_sender=? AND id_dest=?) OR (id_sender=? AND id_dest=?)",
+            sql: "SELECT * FROM `MESSAGE` WHERE (id_sender=? AND id_dest=?) OR (id_sender=? AND id_dest=?) ORDER BY date",
             values: [id_sender, id_dest, id_dest, id_sender]
         };
         console.log(textQuery);
