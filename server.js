@@ -514,6 +514,57 @@ app.get('/badge/own/:id_user&:id_type', function (req, res) {
     }
 });
 
-///SELECT badge.id, badge.name, badge.image, badge.pointsLimit, badge.id_type FROM `badge` INNER JOIN win ON badge.id = win.id_badge WHERE win.id_user = 1 AND badge.id_type = 6 HAVING badge.pointsLimit = MAX(badge.pointsLimit)
+app.get('/conversations/destinataire/:id_dest', function (req, res) {
+    let {id_dest} = req.params;
 
-//SELECT badge.id, badge.name, badge.image, badge.pointsLimit, badge.id_type FROM `badge` INNER JOIN win ON badge.id = win.id_badge WHERE win.id_user = 1 AND badge.id_type = 4 HAVING badge.pointsLimit = (SELECT MAX(badge.pointsLimit) FROM badge INNER JOIN win ON badge.id = win.id_badge WHERE win.id_user = 8 AND badge.id_type = 4 )
+    if (id_dest != null){
+        const textQuery = {
+            sql: "SELECT DISTINCT(USER.id), USER.name, User.surname, User.email, User.birthdate, USER.points, USER.type FROM `MESSAGE` INNER JOIN USER ON USER.id = MESSAGE.id_sender WHERE id_dest=? ",
+            values: [id_dest]
+        };
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
+    }
+})
+
+app.get('/conversations/expediteur/:id_sender', function (req, res){
+    let {id_sender} = req.params;
+    if (id_sender != null){
+        const textQuery = {
+            sql: "SELECT DISTINCT(USER.id), USER.name, User.surname, User.email, User.birthdate, USER.points, USER.type FROM `MESSAGE` INNER JOIN USER ON USER.id = MESSAGE.id_dest WHERE id_sender=? ",
+            values: [id_sender]
+        };
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
+    }
+})
+
+app.post('/messages', function (req, res){
+    let {content} = req.body;
+    let {date} = req.body;
+    let {id_sender} = req.body;
+    let {id_dest} = req.body;
+
+
+    if (id_sender != null){
+        const textQuery = {
+            sql: "INSERT INTO `MESSAGE`(`content`, `date`, `id_sender`, `id_dest`) VALUES (?,?,?,?)",
+            values: [content, date, id_sender, id_dest]
+        };
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
+    }
+})
+
+app.get('/messages/:id_sender&:id_dest', function (req, res){
+    let {id_sender} = req.params;
+    let {id_dest} = req.params;
+    if (id_sender != null){
+        const textQuery = {
+            sql: "SELECT * FROM `MESSAGE` WHERE (id_sender=? AND id_dest=?) OR (id_sender=? AND id_dest=?)",
+            values: [id_sender, id_dest, id_dest, id_sender]
+        };
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
+    }
+})
