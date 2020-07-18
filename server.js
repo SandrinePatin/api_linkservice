@@ -484,6 +484,33 @@ app.get('/badges', function (req, res) {
     database.queryDBReturnArray(textQuery, res);
 });
 
+app.get('/badge/:id_user&:id_type_service', function (req, res) {
+    let {id_user} = req.params;
+    let {id_type_service} = req.params;
+
+    if (id_user && id_type_service){
+        const textQuery = {
+            sql: 'SELECT * from BADGE INNER JOIN WIN ON BADGE.id = WIN.id_badge WHERE WIN.id_user=? AND BADGE.id_type = ?',
+            values: [id_user, id_type_service]
+        };
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
+    }
+});
+
+app.get('/badge/:id_type_service', function (req, res) {
+    let {id_type_service} = req.params;
+
+    if (id_type_service){
+        const textQuery = {
+            sql: 'SELECT * from BADGE WHERE BADGE.id_type = ?',
+            values: [id_type_service]
+        };
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
+    }
+});
+
 app.get('/badges/user/:id_user', function (req, res) {
     let {id_user} = req.params;
 
@@ -498,9 +525,9 @@ app.get('/badges/user/:id_user', function (req, res) {
 });
 
 app.post('/win', function (req, res) {
-    let {id_user} = req.body
-    let {id_badge} = req.body
-    console.log(req.body)
+    let {id_user} = req.body;
+    let {id_badge} = req.body;
+    console.log(req.body);
     if(id_user){
         const textQuery = {
             sql: 'INSERT INTO WIN(`id_badge`, `id_user`) VALUES (?,?)',
