@@ -269,12 +269,26 @@ app.patch('/services/:id', function (req, res) {
     if (id !== undefined) {
         const textQuery = {
             sql: 'UPDATE SERVICE SET `name` = ?, `description` = ?, `date` = ?, `deadline` = ?, `access` = ?, `Statut` = ? WHERE id=?',
-            values: [name, description, date, deadline, access, Statut,id]
+            values: [name, description, date, deadline, access, Statut, id]
         };
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
     } else {
         res.send("Missing Parameters");
+    }
+});
+
+app.patch('/service/statut/:id', function (req, res) {
+    let {id} = req.params;
+    let {Statut} = req.body;
+
+    if (id && Statut){
+        const textQuery = {
+            sql: 'UPDATE SERVICE SET `Statut` = ? WHERE id=?',
+            values: [Statut, id]
+        };
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
     }
 });
 
@@ -319,6 +333,7 @@ app.get('/user/email/:email', function (req, res) {
         };
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
+        // console.log(res);
     } else {
         res.send("Missing Parameters");
     }
