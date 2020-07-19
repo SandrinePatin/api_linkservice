@@ -200,7 +200,7 @@ app.get('/services/statut/:statutService', function (req, res) {
 
     if(statutService){
         const textQuery = {
-            sql :'SELECT * FROM SERVICE WHERE Statut = ? ',
+            sql :'SELECT * FROM service WHERE Statut = ? ',
             values : [statutService]
         };
         console.log(textQuery);
@@ -214,7 +214,7 @@ app.get('/services/typeService/:id_type', function (req, res) {
 
     if(id_type){
         const textQuery = {
-            sql :'SELECT * FROM SERVICE WHERE id_type = ? ',
+            sql :'SELECT * FROM service WHERE id_type = ? ',
             values : [id_type]
         };
         console.log(textQuery);
@@ -228,7 +228,7 @@ app.get('/services/actif/:id_type&:statut', function (req, res) {
 
     if (id_type && statut){
         const textQuery = {
-            sql :'SELECT * FROM SERVICE WHERE id_type = ? AND Statut = ?',
+            sql :'SELECT * FROM service WHERE id_type = ? AND Statut = ?',
             values : [id_type, statut]
         };
         console.log(textQuery);
@@ -239,7 +239,7 @@ app.get('/services/actif/:id_type&:statut', function (req, res) {
 app.get('/services/creator/:id_creator', function (req, res) {
     let {id_creator} = req.params;
 
-    const textQuery = 'SELECT * FROM SERVICE WHERE id_creator=' + id_creator;
+    const textQuery = 'SELECT * FROM service WHERE id_creator=' + id_creator;
     console.log(textQuery);
     database.queryDBReturnArray(textQuery, res);
 });
@@ -249,7 +249,7 @@ app.get('/service/executor/:id_service', function (req, res) {
     let {id_service} = req.params;
 
     if (id_service !== undefined) {
-        const textQuery = 'SELECT * FROM APPLY INNER JOIN USER WHERE execute=2 AND APPLY.id_user=USER.id AND id_service=' + id_service;
+        const textQuery = 'SELECT * FROM apply INNER JOIN USER WHERE execute=2 AND apply.id_user=USER.id AND id_service=' + id_service;
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
     } else {
@@ -268,7 +268,7 @@ app.patch('/services/:id', function (req, res) {
 
     if (id !== undefined) {
         const textQuery = {
-            sql: 'UPDATE SERVICE SET `name` = ?, `description` = ?, `date` = ?, `deadline` = ?, `access` = ?, `Statut` = ? WHERE id=?',
+            sql: 'UPDATE service SET `name` = ?, `description` = ?, `date` = ?, `deadline` = ?, `access` = ?, `Statut` = ? WHERE id=?',
             values: [name, description, date, deadline, access, Statut, id]
         };
         console.log(textQuery);
@@ -284,7 +284,7 @@ app.patch('/service/statut/:id', function (req, res) {
 
     if (id && Statut){
         const textQuery = {
-            sql: 'UPDATE SERVICE SET `Statut` = ? WHERE id=?',
+            sql: 'UPDATE service SET `Statut` = ? WHERE id=?',
             values: [Statut, id]
         };
         console.log(textQuery);
@@ -305,7 +305,7 @@ app.post('/services', function (req, res) {
     let {id_creator} = req.body;
 
     const textQuery = {
-        sql: 'INSERT INTO SERVICE (`name`, `description`, `date`, `deadline`,`cost`,`profit`, `access`, `Statut`, id_type, id_creator) VALUES (?,?,?,?,?,?,?,?,?,?) ',
+        sql: 'INSERT INTO service (`name`, `description`, `date`, `deadline`,`cost`,`profit`, `access`, `Statut`, id_type, id_creator) VALUES (?,?,?,?,?,?,?,?,?,?) ',
         values: [name, description, date, deadline, cost, profit, access, Statut, id_type,id_creator]
     };
     console.log(textQuery);
@@ -316,7 +316,7 @@ app.post('/services', function (req, res) {
 app.get('/user/:idUser', function (req, res) {
     let {idUser} = req.params
     if (idUser !== undefined) {
-        const textQuery = 'SELECT * FROM USER WHERE id=' + idUser;
+        const textQuery = 'SELECT * FROM user WHERE id=' + idUser;
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
     } else {
@@ -328,7 +328,7 @@ app.get('/user/email/:email', function (req, res) {
     let {email} = req.params;
     if (email !== undefined) {
         const textQuery = {
-            sql : 'SELECT * FROM USER WHERE email=?',
+            sql : 'SELECT * FROM user WHERE email=?',
             values : [email]
         };
         console.log(textQuery);
@@ -349,7 +349,7 @@ app.patch('/user/:id', function (req, res) {
 
     if(id){
         const textQuery = {
-            sql: 'UPDATE USER SET `name`=?, `surname`=?, `birthdate`=?, `points`=?,`type`=? WHERE id = ?',
+            sql: 'UPDATE user SET `name`=?, `surname`=?, `birthdate`=?, `points`=?,`type`=? WHERE id = ?',
             values: [name, surname, birthdate, points, type, id]
         };
         console.log(textQuery);
@@ -370,7 +370,7 @@ app.post('/user', function (req, res) {
     let {postcode} = req.body;
 
     const textQuery = {
-        sql: 'INSERT INTO USER (`email`,`password`,`name`, `surname`, `birthdate`, `points`,`type`,`adress`,`city`,`postcode`) VALUES (?,?,?,?,?,?,?,?,?,?)',
+        sql: 'INSERT INTO user (`email`,`password`,`name`, `surname`, `birthdate`, `points`,`type`,`adress`,`city`,`postcode`) VALUES (?,?,?,?,?,?,?,?,?,?)',
         values: [email, password, name, surname, birthdate, points, type, adress, city, postcode]
     };
     console.log(textQuery);
@@ -397,14 +397,14 @@ app.post('/connection/user', function (req, res) {
 
 app.get('/typeService/active', function (req, res) {
 
-    const textQuery = 'SELECT * FROM TYPE_SERVICE WHERE active=1';
+    const textQuery = 'SELECT * FROM type_service WHERE active=1';
     console.log(textQuery);
     database.queryDBReturnArray(textQuery, res);
 });
 
 app.get('/typeService/:idType', function (req, res) {
     let {idType} = req.params
-    const textQuery = 'SELECT * FROM TYPE_SERVICE WHERE id=' + idType;
+    const textQuery = 'SELECT * FROM type_service WHERE id=' + idType;
     console.log(textQuery);
     database.queryDBReturnArray(textQuery, res);
 
@@ -417,7 +417,7 @@ app.post('/apply', function (req, res) {
     const {execute} = req.body;
 
     if (id_service !== undefined && id_user !== undefined) {
-        const textQuery = 'INSERT INTO APPLY (`id_service`,`id_user`,`execute`) VALUES (' + id_service + ',' + id_user + ',' + execute + ')';
+        const textQuery = 'INSERT INTO apply (`id_service`,`id_user`,`execute`) VALUES (' + id_service + ',' + id_user + ',' + execute + ')';
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
     } else {
@@ -434,7 +434,7 @@ app.patch('/apply', function (req, res) {
     const {commentaire} = req.body;
 
     if (id_service !== undefined && id_user !== undefined) {
-        const textQuery = 'UPDATE APPLY SET `id_service`=' + id_service + ',`execute`=' + execute + ',`note`=' + note + ',`commentaire`="' + commentaire + '" WHERE id_service='+id_service+" AND id_user="+id_user;
+        const textQuery = 'UPDATE apply SET `id_service`=' + id_service + ',`execute`=' + execute + ',`note`=' + note + ',`commentaire`="' + commentaire + '" WHERE id_service='+id_service+" AND id_user="+id_user;
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
     } else {
@@ -446,7 +446,7 @@ app.patch('/apply', function (req, res) {
 app.get('/apply/:id_user', function (req, res) {
     let {id_user} = req.params
     const textQuery = {
-        sql : 'SELECT * FROM APPLY INNER JOIN service WHERE id_service = id AND Statut>0 AND id_user=?',
+        sql : 'SELECT * FROM apply INNER JOIN service WHERE id_service = id AND Statut>0 AND id_user=?',
         values : [id_user]
     };
     console.log(textQuery);
@@ -456,7 +456,7 @@ app.get('/apply/:id_user', function (req, res) {
 
 app.get('/apply/service/:id_service', function (req, res) {
     let {id_service} = req.params
-    const textQuery = 'SELECT * FROM APPLY INNER JOIN user WHERE id_user = id AND execute=1 AND id_service=' + id_service;
+    const textQuery = 'SELECT * FROM apply INNER JOIN user WHERE id_user = id AND execute=1 AND id_service=' + id_service;
     console.log(textQuery);
     database.queryDBReturnArray(textQuery, res);
 
@@ -468,7 +468,7 @@ app.get('/apply/service/user/:id_service&:id_user', function (req, res) {
 
     if(id_service && id_user){
         const textQuery = {
-            sql : 'SELECT * FROM APPLY WHERE id_user = ? AND id_service=?',
+            sql : 'SELECT * FROM apply WHERE id_user = ? AND id_service=?',
             values : [id_user, id_service]
         };
         console.log(textQuery);
@@ -486,7 +486,7 @@ app.get('/apply/note/:id_user&:id_type', function (req, res) {
 
     if(id_type && id_user){
         const textQuery = {
-            sql: 'SELECT COALESCE(sum(note), 0) as note from APPLY INNER JOIN SERVICE ON APPLY.id_service = SERVICE.id WHERE APPLY.execute = 2 and APPLY.id_user = ? and SERVICE.id_type = ?',
+            sql: 'SELECT COALESCE(sum(note), 0) as note from apply INNER JOIN service ON apply.id_service = service.id WHERE apply.execute = 2 and apply.id_user = ? and apply.id_type = ?',
             values: [id_user, id_type]
         };
         console.log(textQuery);
