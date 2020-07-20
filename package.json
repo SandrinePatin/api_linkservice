@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/SandrinePatin/api_linkservice#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "ipware": "^2.0.0",
     "jsonwebtoken": "^8.5.1",

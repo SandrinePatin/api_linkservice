@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const database = require('./db_connection');
 const create = require('./create');
 const express = require('express');
+const cors = require('cors');
 const app = express();
 
 const PORT = process.env.PORT || 4000;
@@ -16,6 +17,7 @@ const PORT = process.env.PORT || 4000;
 // faire une fonction d'authentification
 
 app.use(express.json());
+app.use(cors());
 
 (async () => {
     app.listen(PORT, function () {
@@ -378,7 +380,7 @@ app.post('/user', function (req, res) {
 
 });
 
-app.post('/connection/user', function (req, res) {
+app.post('/connection/user', cors(), function (req, res) {
     const {email} = req.body;
     const {password} = req.body;
 
