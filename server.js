@@ -498,7 +498,7 @@ app.get('/apply/note/:id_user&:id_type', function (req, res) {
 
 app.get('/badges', function (req, res) {
     const textQuery = {
-        sql: 'SELECT * from BADGE ORDER BY pointsLimit'
+        sql: 'SELECT * from badge ORDER BY pointsLimit'
     };
     console.log(textQuery);
     database.queryDBReturnArray(textQuery, res);
@@ -510,7 +510,7 @@ app.get('/badge/:id_user&:id_type_service', function (req, res) {
 
     if (id_user && id_type_service){
         const textQuery = {
-            sql: 'SELECT * from BADGE INNER JOIN WIN ON BADGE.id = WIN.id_badge WHERE WIN.id_user=? AND BADGE.id_type = ?',
+            sql: 'SELECT * from badge INNER JOIN win ON badge.id = win.id_badge WHERE win.id_user=? AND badge.id_type = ?',
             values: [id_user, id_type_service]
         };
         console.log(textQuery);
@@ -523,7 +523,7 @@ app.get('/badge/:id_type_service', function (req, res) {
 
     if (id_type_service){
         const textQuery = {
-            sql: 'SELECT * from BADGE WHERE BADGE.id_type = ?',
+            sql: 'SELECT * from badge WHERE badge.id_type = ?',
             values: [id_type_service]
         };
         console.log(textQuery);
@@ -536,7 +536,7 @@ app.get('/badges/user/:id_user', function (req, res) {
 
     if(id_user){
         const textQuery = {
-            sql: 'SELECT * from WIN WHERE id_user=?',
+            sql: 'SELECT * from win WHERE id_user=?',
             values: [id_user]
         };
         console.log(textQuery);
@@ -550,7 +550,7 @@ app.post('/win', function (req, res) {
     console.log(req.body);
     if(id_user){
         const textQuery = {
-            sql: 'INSERT INTO WIN(`id_badge`, `id_user`) VALUES (?,?)',
+            sql: 'INSERT INTO win(`id_badge`, `id_user`) VALUES (?,?)',
             values: [id_badge,id_user]
         };
         console.log(textQuery);
@@ -578,7 +578,7 @@ app.get('/conversations/destinataire/:id_dest', function (req, res) {
 
     if (id_dest != null){
         const textQuery = {
-            sql: "SELECT DISTINCT(USER.id), USER.name, User.surname, User.email, User.birthdate, USER.points, USER.type FROM `MESSAGE` INNER JOIN USER ON USER.id = MESSAGE.id_sender WHERE id_dest=? ",
+            sql: "SELECT DISTINCT(user.id), user.name, user.surname, user.email, user.birthdate, user.points, user.type FROM `message` INNER JOIN user ON user.id = message.id_sender WHERE id_dest=? ",
             values: [id_dest]
         };
         console.log(textQuery);
@@ -590,7 +590,7 @@ app.get('/conversations/expediteur/:id_sender', function (req, res){
     let {id_sender} = req.params;
     if (id_sender != null){
         const textQuery = {
-            sql: "SELECT DISTINCT(USER.id), USER.name, User.surname, User.email, User.birthdate, USER.points, USER.type FROM `MESSAGE` INNER JOIN USER ON USER.id = MESSAGE.id_dest WHERE id_sender=? ",
+            sql: "SELECT DISTINCT(user.id), user.name, user.surname, user.email, user.birthdate, user.points, user.type FROM `message` INNER JOIN user ON user.id = message.id_dest WHERE id_sender=? ",
             values: [id_sender]
         };
         console.log(textQuery);
@@ -607,7 +607,7 @@ app.post('/messages', function (req, res){
 
     if (id_sender != null){
         const textQuery = {
-            sql: "INSERT INTO `MESSAGE`(`content`, `date`, `id_sender`, `id_dest`) VALUES (?,?,?,?)",
+            sql: "INSERT INTO `message`(`content`, `date`, `id_sender`, `id_dest`) VALUES (?,?,?,?)",
             values: [content, date, id_sender, id_dest]
         };
         console.log(textQuery);
@@ -620,7 +620,7 @@ app.get('/messages/:id_sender&:id_dest', function (req, res){
     let {id_dest} = req.params;
     if (id_sender != null){
         const textQuery = {
-            sql: "SELECT * FROM `MESSAGE` WHERE (id_sender=? AND id_dest=?) OR (id_sender=? AND id_dest=?) ORDER BY date",
+            sql: "SELECT * FROM `message` WHERE (id_sender=? AND id_dest=?) OR (id_sender=? AND id_dest=?) ORDER BY date",
             values: [id_sender, id_dest, id_dest, id_sender]
         };
         console.log(textQuery);
