@@ -364,7 +364,7 @@ app.patch('/user/ban/:id', function (req, res) {
 
     if(id){
         const textQuery = {
-            sql: 'UPDATE user SET `type`=ban WHERE id = ?',
+            sql: 'UPDATE user SET `type`="ban" WHERE id = ?',
             values: [id]
         };
         console.log(textQuery);
