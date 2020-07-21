@@ -377,6 +377,19 @@ app.patch('/user/ban/:id', function (req, res) {
     }
 });
 
+app.patch('/user/delete/:id', function (req, res) {
+    let {id} = req.params;
+
+    if(id){
+        const textQuery = {
+            sql: 'UPDATE user SET `active`=0 WHERE id = ?',
+            values: [id]
+        };
+        console.log(textQuery);
+        database.queryDBReturnArray(textQuery, res);
+    }
+});
+
 app.post('/user', function (req, res) {
     let {email} = req.body;
     let {password} = req.body;
