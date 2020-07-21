@@ -506,7 +506,7 @@ app.get('/apply/note/:id_user&:id_type', function (req, res) {
 
     if(id_type && id_user){
         const textQuery = {
-            sql: 'SELECT COALESCE(sum(note), 0) as note from apply INNER JOIN service ON apply.id_service = service.id WHERE apply.execute = 2 and apply.id_user = ? and apply.id_type = ?',
+            sql: 'SELECT COALESCE(sum(note), 0) as note from apply INNER JOIN service ON apply.id_service = service.id WHERE apply.execute = 2 and apply.id_user = ? and service.id_type = ?',
             values: [id_user, id_type]
         };
         console.log(textQuery);
