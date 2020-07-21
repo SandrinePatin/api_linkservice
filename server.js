@@ -417,7 +417,7 @@ app.post('/connection/user', cors(), function (req, res) {
 
     if (email !== undefined && password !== undefined) {
         const textQuery = {
-            sql: 'SELECT * FROM user WHERE email=? AND password=?',
+            sql: 'SELECT * FROM user WHERE email=? AND password=? AND active=1',
             values: [email, password]
         }
         console.log(textQuery);
