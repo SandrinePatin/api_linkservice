@@ -254,7 +254,7 @@ app.get('/service/executor/:id_service', function (req, res) {
 
     if (id_service !== undefined) {
         const textQuery = {
-            sql: 'SELECT * FROM apply INNER JOIN user WHERE execute=2 AND apply.id_user=USER.id AND id_service=?',
+            sql: 'SELECT * FROM apply INNER JOIN user WHERE execute=2 AND apply.id_user=user.id AND id_service=?',
             values: id_service
         };
         console.log(textQuery);
