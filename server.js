@@ -241,17 +241,22 @@ app.get('/services/actif/:id_type&:statut', function (req, res) {
 app.get('/services/creator/:id_creator', function (req, res) {
     let {id_creator} = req.params;
 
-    const textQuery = 'SELECT * FROM service WHERE id_creator=' + id_creator;
+    const textQuery = {
+        sql: 'SELECT * FROM service WHERE id_creator=?',
+        values: id_creator
+    };
     console.log(textQuery);
     database.queryDBReturnArray(textQuery, res);
 });
 
 app.get('/service/executor/:id_service', function (req, res) {
-
     let {id_service} = req.params;
 
     if (id_service !== undefined) {
-        const textQuery = 'SELECT * FROM apply INNER JOIN USER WHERE execute=2 AND apply.id_user=USER.id AND id_service=' + id_service;
+        const textQuery = {
+            sql: 'SELECT * FROM apply INNER JOIN user WHERE execute=2 AND apply.id_user=USER.id AND id_service=?',
+            values: id_service
+        };
         console.log(textQuery);
         database.queryDBReturnArray(textQuery, res);
     } else {
